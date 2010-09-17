@@ -85,10 +85,11 @@ class ErrorBase(Model):
 
 class ErrorBatch(ErrorBase):
     # XXX: We're using the legacy column for `is_resolved` for status
+    datetime        = models.DateTimeField(auto_now_add=True, editable=False, db_index=True)
     status          = models.PositiveIntegerField(default=0, db_column="is_resolved", choices=STATUS_LEVELS)
     times_seen      = models.PositiveIntegerField(default=1)
-    last_seen       = models.DateTimeField(default=datetime.datetime.now, db_index=True)
-    first_seen      = models.DateTimeField(default=datetime.datetime.now, db_index=True)
+    last_seen       = models.DateTimeField(auto_now_add=True, db_index=True)
+    first_seen      = models.DateTimeField(auto_now_add=True, db_index=True)
 
     objects         = ErrorBatchManager()
 
@@ -145,7 +146,7 @@ class ErrorBatch(ErrorBase):
                 warnings.warn(u'Unable to process log entry: %s' % (exc,))
 
 class Error(ErrorBase):
-    datetime        = models.DateTimeField(default=datetime.datetime.now, db_index=True)
+    datetime        = models.DateTimeField(auto_now_add=True, editable=False)
     data            = JSONDictField(blank=True, null=True)
 
     class Meta:

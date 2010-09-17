@@ -94,7 +94,7 @@ class PreformattedText(forms.Textarea):
         if value != '':
             # Only add the 'value' attribute if a value is non-empty.
             value = force_unicode(value)
-        return mark_safe(u'<pre style="clear:left;display:block;padding-top:5px;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;">%s</pre>' % (escape(value),))
+        return mark_safe(u'<pre>%s</pre>' % (escape(value),))
 
 class Link(forms.TextInput):
     input_type = 'a'
@@ -111,7 +111,6 @@ class ErrorBatchAdminForm(forms.ModelForm):
     url = forms.CharField(widget=Link())
     
     class Meta:
-        fields = ('url', 'logger', 'server_name', 'class_name', 'level', 'message', 'times_seen', 'first_seen', 'last_seen', 'traceback')
         model = ErrorBatch
 
 class ErrorAdminForm(forms.ModelForm):
@@ -119,7 +118,6 @@ class ErrorAdminForm(forms.ModelForm):
     url = forms.CharField(widget=Link())
     
     class Meta:
-        fields = ('url', 'logger', 'server_name', 'class_name', 'level', 'message', 'datetime', 'traceback')
         model = ErrorBatch
 
 # Actual admin modules
