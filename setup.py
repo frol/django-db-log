@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
 setup(
@@ -10,7 +10,7 @@ setup(
     url='http://github.com/tutca/django-db-log',
     description = 'Exception Logging to a Database in Django',
     mantainer = u'Matías Iturburu',
-    mantainer_email = 'maturburu@gmail.com',
+    mantainer_email = 'maturburu@gmail.com ',
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
