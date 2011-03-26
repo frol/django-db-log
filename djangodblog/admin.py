@@ -3,7 +3,7 @@ from django.contrib.admin.filterspecs import AllValuesFilterSpec, FilterSpec
 from django.contrib.admin.util import unquote
 from django.contrib.admin.views.main import ChangeList
 from django.core.cache import cache
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, InvalidPage
 from django.utils.encoding import force_unicode, smart_unicode
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -36,17 +36,16 @@ class EfficientPaginator(Paginator):
 class EfficientChangeList(ChangeList):
     def get_results(self, request):
         paginator = EfficientPaginator(self.query_set, self.list_per_page)
-        result_count = ''
+        result_count = 0
 
         # Get the list of objects to display on this page.
         try:
-            result_list = paginator.page(self.page_num+1).object_list
+            self.result_list = paginator.page(self.page_num+1).object_list
         except InvalidPage:
-            result_list = ()
+            self.esult_list = ()
 
         self.full_result_count = result_count
         self.result_count = result_count
-        self.result_list = result_list
         self.can_show_all = False
         self.multi_page = True
         self.paginator = paginator
@@ -56,8 +55,8 @@ class EfficientModelAdmin(admin.ModelAdmin):
         return EfficientChangeList
 
 class EfficientAllValuesFilterSpec(AllValuesFilterSpec):
-    def __init__(self, f, request, params, model, model_admin):
-        super(AllValuesFilterSpec, self).__init__(f, request, params, model, model_admin)
+    def __init__(self, f, request, params, model, model_admin, *args, **kwargs):
+        super(AllValuesFilterSpec, self).__init__(f, request, params, model, model_admin, *args, **kwargs)
         self.lookup_val = request.GET.get(f.name, None)
         qs = model_admin.queryset(request).order_by(f.name)
         # self.lookup_choices = list(qs.values_list(f.name, flat=True).distinct())
